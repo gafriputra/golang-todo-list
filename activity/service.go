@@ -10,7 +10,7 @@ type Service interface {
 	GetActivityByID(input GetActivityDetailInput) (Activity, error)
 	CreateActivity(input CreateActivityInput) (Activity, error)
 	UpdateActivity(inputID GetActivityDetailInput, input CreateActivityInput) (Activity, error)
-	DeleteActivity(inputID GetActivityDetailInput, input CreateActivityInput) (Activity, error)
+	DeleteActivity(id int) (Activity, error)
 }
 
 type service struct {
@@ -33,7 +33,7 @@ func (s *service) CreateActivity(input CreateActivityInput) (Activity, error) {
 	now := time.Now()
 	return s.repository.Save(Activity{
 		Email:     input.Email,
-		Title:     input.Email,
+		Title:     input.Title,
 		CreatedAt: &now,
 	})
 }
@@ -53,8 +53,8 @@ func (s *service) UpdateActivity(inputID GetActivityDetailInput, input CreateAct
 	return s.repository.Update(activity)
 }
 
-func (s *service) DeleteActivity(inputID GetActivityDetailInput, input CreateActivityInput) (Activity, error) {
-	activity, err := s.repository.FindByID(inputID.ID)
+func (s *service) DeleteActivity(id int) (Activity, error) {
+	activity, err := s.repository.FindByID(id)
 	if err != nil {
 		return activity, err
 	} else if activity.ID == 0 {

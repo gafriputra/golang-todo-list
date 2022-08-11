@@ -4,7 +4,7 @@ import "time"
 
 type TodoFormatter struct {
 	ID              int        `json:"id"`
-	ActivityGroupID int        `json:"todo_group_id"`
+	ActivityGroupID int        `json:"activity_group_id"`
 	Title           string     `json:"title"`
 	IsActive        bool       `json:"is_active"`
 	Priority        string     `json:"priority"`

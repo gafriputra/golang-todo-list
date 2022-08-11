@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	dsn := "root:@tcp(127.0.0.1:3306)/golang?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "gafri:gafri@tcp(127.0.0.1:3306)/golang?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
@@ -39,7 +39,7 @@ func main() {
 	apiActivity.GET("/:id", activityHandler.GetActivity)
 	apiActivity.POST("/", activityHandler.CreateActivity)
 	apiActivity.PATCH("/:id", activityHandler.UpdatedActivity)
-	apiActivity.DELETE("/:id", activityHandler.UpdatedActivity)
+	apiActivity.DELETE("/:id", activityHandler.DeleteActivity)
 
 	apiTodo.GET("/", todoHandler.GetTodos)
 	apiTodo.GET("/:id", todoHandler.GetTodo)
@@ -47,5 +47,5 @@ func main() {
 	apiTodo.PATCH("/:id", todoHandler.UpdatedTodo)
 	apiTodo.DELETE("/:id", todoHandler.UpdatedTodo)
 
-	router.Run()
+	router.Run("0.0.0.0:3000")
 }

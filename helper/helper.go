@@ -5,29 +5,17 @@ import (
 )
 
 type Response struct {
-	Meta Meta        `json:"meta"`
-	Data interface{} `json:"data"`
-}
-
-type Meta struct {
-	Message string `json:"message"`
-	Code    int    `json:"code"`
 	Status  string `json:"status"`
+	Message string `json:"message"`
+	Data    any    `json:"data"`
 }
 
-func APIResponse(message string, code int, status string, data interface{}) Response {
-	meta := Meta{
-		Message: message,
-		Code:    code,
+func APIResponse(message string, code int, status string, data any) Response {
+	return Response{
 		Status:  status,
+		Message: status,
+		Data:    data,
 	}
-
-	jsonResponse := Response{
-		Meta: meta,
-		Data: data,
-	}
-
-	return jsonResponse
 }
 
 func FormatValidationError(err error) []string {

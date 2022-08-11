@@ -18,13 +18,13 @@ func NewActivityHandler(service activity.Service) *activityHandler {
 }
 
 func (h *activityHandler) GetActivities(c *gin.Context) {
-	Activities, err := h.service.GetActivities()
+	activities, err := h.service.GetActivities()
 	if err != nil {
 		response := helper.APIResponse("Error to get Activities", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("List of Activities", http.StatusOK, "success", activity.FormatActivities(Activities))
+	response := helper.APIResponse("List of Activities", http.StatusOK, "success", activity.FormatActivities(activities))
 	c.JSON(http.StatusOK, response)
 }
 
@@ -110,23 +110,15 @@ func (h *activityHandler) DeleteActivity(c *gin.Context) {
 
 	err := c.ShouldBindUri(&inputID)
 	if err != nil {
-		response := helper.APIResponse("Failed to update activity", http.StatusBadRequest, "error", err.Error())
+		response := helper.APIResponse("Failed to delete activity", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	var inputData activity.CreateActivityInput
-	err = c.ShouldBindJSON(&inputData)
+	updatedActivity, err := h.service.DeleteActivity(inputID.ID)
 	if err != nil {
-		response := helper.APIResponse("Failed to update activity", http.StatusBadRequest, "error", err.Error())
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusBadRequest, response("Failed delete Activity!", http.StatusBadRequest, "error", err.Error()))
 		return
 	}
-
-	updatedActivity, err := h.service.UpdateActivity(inputID, inputData)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, response("Failed Update Activity!", http.StatusBadRequest, "error", err.Error()))
-		return
-	}
-	c.JSON(http.StatusOK, response("Success Update Activity!", http.StatusOK, "success", activity.FormatActivity(updatedActivity)))
+	c.JSON(http.StatusOK, response("Success delete Activity!", http.StatusOK, "success", activity.FormatActivity(updatedActivity)))
 }
