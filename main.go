@@ -55,4 +55,7 @@ func main() {
 	apiTodo.POST("/", todoHandler.CreateTodo)
 	apiTodo.PATCH("/:id", todoHandler.UpdatedTodo)
 	apiTodo.DELETE("/:id", todoHandler.DeleteTodo)
+
+	router.Run("0.0.0.0:3030")
+
 }

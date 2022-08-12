@@ -21,7 +21,7 @@ WORKDIR /
 COPY --from=build /product-service /product-service
 COPY .env /
 
-EXPOSE 3000
+EXPOSE 3030
 
 USER nonroot:nonroot
 
