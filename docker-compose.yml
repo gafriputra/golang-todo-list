@@ -13,6 +13,9 @@ services:
       - "3306:3306"
     volumes:
       - dbdata:/var/lib/mysql
+    networks:
+      - backend
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: pma
@@ -25,5 +28,30 @@ services:
     restart: always
     ports:
       - 8081:80
+    networks:
+      - backend
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - backend
+    environment:
+        - MYSQL_HOST: 127.0.0.1
+        - MYSQL_PORT: 3306
+        - MYSQL_DATABASE: golang
+        - MYSQL_USER: gafri
+        - MYSQL_PASSWORD: gafri
+
+networks:
+  backend:
+  
 volumes:
   dbdata:

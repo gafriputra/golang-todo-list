@@ -110,23 +110,15 @@ func (h *todoHandler) DeleteTodo(c *gin.Context) {
 
 	err := c.ShouldBindUri(&inputID)
 	if err != nil {
-		response := helper.APIResponse("Failed to update todo", http.StatusBadRequest, "error", err.Error())
+		response := helper.APIResponse("Failed to delete todo", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	var inputData todo.CreateTodoInput
-	err = c.ShouldBindJSON(&inputData)
+	deleteTodo, err := h.service.DeleteTodo(inputID.ID)
 	if err != nil {
-		response := helper.APIResponse("Failed to update todo", http.StatusBadRequest, "error", err.Error())
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusBadRequest, response("Failed delete Todo!", http.StatusBadRequest, "error", err.Error()))
 		return
 	}
-
-	updatedTodo, err := h.service.UpdateTodo(inputID, inputData)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, response("Failed Update Todo!", http.StatusBadRequest, "error", err.Error()))
-		return
-	}
-	c.JSON(http.StatusOK, response("Success Update Todo!", http.StatusOK, "success", todo.FormatTodo(updatedTodo)))
+	c.JSON(http.StatusOK, response("Success Update Todo!", http.StatusOK, "success", todo.FormatTodo(deleteTodo)))
 }

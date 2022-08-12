@@ -10,7 +10,7 @@ type Service interface {
 	GetTodoByID(input GetTodoDetailInput) (Todo, error)
 	CreateTodo(input CreateTodoInput) (Todo, error)
 	UpdateTodo(inputID GetTodoDetailInput, input CreateTodoInput) (Todo, error)
-	DeleteTodo(inputID GetTodoDetailInput, input CreateTodoInput) (Todo, error)
+	DeleteTodo(ID int) (Todo, error)
 }
 
 type service struct {
@@ -41,28 +41,28 @@ func (s *service) CreateTodo(input CreateTodoInput) (Todo, error) {
 }
 
 func (s *service) UpdateTodo(inputID GetTodoDetailInput, input CreateTodoInput) (Todo, error) {
-	activity, err := s.repository.FindByID(inputID.ID)
+	todo, err := s.repository.FindByID(inputID.ID)
 	if err != nil {
-		return activity, err
-	} else if activity.ID == 0 {
-		return activity, errors.New("activity not found")
+		return todo, err
+	} else if todo.ID == 0 {
+		return todo, errors.New("todo not found")
 	}
 
 	now := time.Now()
-	activity.Title = input.Title
-	activity.UpdatedAt = &now
-	return s.repository.Update(activity)
+	todo.Title = input.Title
+	todo.UpdatedAt = &now
+	return s.repository.Update(todo)
 }
 
-func (s *service) DeleteTodo(inputID GetTodoDetailInput, input CreateTodoInput) (Todo, error) {
-	activity, err := s.repository.FindByID(inputID.ID)
+func (s *service) DeleteTodo(ID int) (Todo, error) {
+	todo, err := s.repository.FindByID(ID)
 	if err != nil {
-		return activity, err
-	} else if activity.ID == 0 {
-		return activity, errors.New("activity not found")
+		return todo, err
+	} else if todo.ID == 0 {
+		return todo, errors.New("todo not found")
 	}
 
 	now := time.Now()
-	activity.DeletedAt = &now
-	return s.repository.Update(activity)
+	todo.DeletedAt = &now
+	return s.repository.Update(todo)
 }
